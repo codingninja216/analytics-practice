@@ -1,9 +1,19 @@
 -- Retention Metrics (Practice)
+WITH customer_metrics AS (
+    SELECT
+        DATE_TRUNC(order_date, MONTH) AS month,
+        customer_id,
+        is_retained,
+    FROM orders
+)
+
 SELECT
-    DATE_TRUNC(order_date, MONTH) AS month,
-    COUNT(DISTINCT customer_id) AS new_customers,
+    month,
+    COUNT(DISTINCT customer_id) AS total_customers,
     COUNT(DISTINCT CASE WHEN is_retained THEN customer_id END) AS retained_customers,
-    SAFE_DIVIDE(COUNT(DISTINCT CASE WHEN is_retained THEN customer_id END), COUNT(DISTINCT customer_id)) AS retention_rate
-FROM orders
-GROUP BY 1
-ORDER BY 1;
+    SAFE_DIVIDE(COUNT(DISTINCT CASE WHEN is_retained THEN customer_id END), 
+                    COUNT(DISTINCT customer_id))
+                     AS retention_rate
+FROM customer_metrics
+GROUP BY month
+ORDER BY month;
