@@ -12,7 +12,7 @@ SELECT
     COUNT(DISTINCT customer_id) AS total_customers,
     COUNT(DISTINCT CASE WHEN is_retained THEN customer_id END) AS retained_customers,
     SAFE_DIVIDE(COUNT(DISTINCT CASE WHEN is_retained THEN customer_id END), 
-                    COUNT(DISTINCT customer_id)) * 100
+                    COUNT(DISTINCT customer_id))
                      AS retention_rate
 FROM customer_metrics
 GROUP BY month
